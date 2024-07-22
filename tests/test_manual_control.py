@@ -86,5 +86,5 @@ def manual_control():
     except KeyboardInterrupt:
         print("Exiting...")
 
-if __name__ == "__main__":
-    manual_control()
+#if __name__ == "__main__":
+manual_control()
