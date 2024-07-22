@@ -26,8 +26,8 @@ M3_DIR_PIN = 375  # P8_14 M3
 M4_DIR_PIN = 351  # P8_26 M4
 
 #safety limits for potentiometers in raw adc values
-ROLL_POT_MAX = 2000
-ROLL_POT_MIN = 100
+ROLL_POT_MAX = 1900
+ROLL_POT_MIN = 300
 
-PITCH_POT_MAX = 2000
+PITCH_POT_MAX = 1900
 PITCH_POT_MIN = 300

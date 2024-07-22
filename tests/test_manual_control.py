@@ -22,7 +22,7 @@ def get_key():
     return ch  # Return the character read
 
 def manual_control():
-    Kp, Kd = 1.0, 0.1  # PD controller gains
+    Kp, Kd = 10, 2  # PD controller gains
     pitch_pos = read_adc(PITCH_POT_PATH)
     roll_pos = read_adc(ROLL_POT_PATH)
     pitch_controller = PDController(Kp, Kd, pitch_pos)
@@ -59,6 +59,14 @@ def manual_control():
                     roll_pos += 50
                 elif key == '\x1b[D':  # Left arrow
                     roll_pos -= 50
+
+            # Apply safety limits
+            pitch_pos_d = max(PITCH_POT_MIN, min(pitch_pos, PITCH_POT_MAX))
+            roll_pos_d = max(ROLL_POT_MIN, min(roll_pos, ROLL_POT_MAX))
+
+            # Update setpoints for PD controllers
+            pitch_controller.set_setpoint(pitch_pos_d)
+            roll_controller.set_setpoint(roll_pos_d)
 
             # Read current ADC values
             current_pitch_adc = read_adc(PITCH_POT_PATH)
