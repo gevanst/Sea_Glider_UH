@@ -3,7 +3,7 @@ from control.PD_controller import PDController
 from hardware.adc import read_adc
 from hardware.pwm import PWMController
 from hardware.gpio import GPIOControl
-from utils.loffer import testData # Import custom testData class
+from utils.logger import testData # Import custom testData class
 
 logger = testData() #create instance with current filename and time
 #logger = testData(filename = 'test_pwm_pdctrl_testData.txt') #or enter manual name
