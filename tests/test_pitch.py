@@ -3,6 +3,10 @@ from control.PD_controller import PDController
 from hardware.adc import read_adc
 from hardware.pwm import PWMController
 from hardware.gpio import GPIOControl
+from utils.logger import tesData # Import custom logger class
+
+logger = testData() # Generate test data log with test name and timestamp
+#logger = testData(filename = 'test_pitch_test00') #or enter filename manually
 
 pos_I = read_adc(PITCH_POT_PATH)  # Read initial position of pitch motor
 controller = PDController(Kp=1, Kd=1, setpoint=pos_I)  # Initialize PD controller for pitch motor with gains
@@ -21,10 +25,12 @@ while True:
         setpoint = ROLL_POT_MIN + 10  # Add a little safety margin to the stop limit value measured earlier
         controller.set_setpoint(setpoint)
         pos = read_adc(PITCH_POT_PATH)
-
+        logger.log("position",pos)
         while PITCH_POT_MIN < pos < setpoint:
             pos = read_adc(PITCH_POT_PATH)
             output_c = controller.compute(pos)
+            logger.log("position",pos)
+            logger.log("output_c",output_c)
             if output_c > 0:
                 gpio.set_value(M4_DIR_PIN ,1)  # Set direction pin to high
                 pwm.set_pwm_dc(M4_PATH, output_c)
@@ -35,12 +41,14 @@ while True:
 
     if pos_I > 1000 and pos_max is None:
         pos = read_adc(PITCH_POT_PATH)
+        logger.log("position",pos)
         setpoint = ROLL_POT_MAX - 10
         controller.set_setpoint(setpoint)
-
         while setpoint < pos < PITCH_POT_MAX:
             pos = read_adc(PITCH_POT_PATH)
             output_c = controller.compute(pos)
+            logger.log("position",pos)
+            logger.log("output_c",output_c)
             if output_c > 0:
                 gpio.set_value(M4_DIR_PIN, 1)
                 pwm.set_pwm_dc(M4_PATH, output_c)
@@ -52,11 +60,14 @@ while True:
     # Drive to the midpoint of the total pitch travel
     if pos_min is not None and pos_max is not None:
         pos_F = (pos_max + pos_min) / 2
+        logger.log("midpoint position", pos_F)
         controller.set_setpoint(pos_F)
 
         while abs(pos - pos_F) > pos_tol: #drive to the midpoint with some tolerance
             pos = read_adc(PITCH_POT_PATH)
             output_c = controller.compute(pos)
+            logger.log("position",pos)
+            logger.log("output_c",output_c)
             if output_c > 0:
                 gpio.set_value(M4_DIR_PIN, 1)
                 pwm.set_pwm_dc(M4_PATH, output_c)
