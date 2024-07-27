@@ -3,6 +3,10 @@ from control.PD_controller import PDController
 from hardware.adc import read_adc
 from hardware.pwm import PWMController
 from hardware.gpio import GPIOControl
+from utils.loffer import testData # Import custom testData class
+
+logger = testData() #create instance with current filename and time
+#logger = testData(filename = 'test_pwm_pdctrl_testData.txt') #or enter manual name
 
 pwm = PWMController(PWM_CHIP_BASE, PWM_PERIOD_NS)
 
@@ -15,7 +19,9 @@ pos = read_adc(PITCH_POT_PATH)
 
 while pos > 350:
     pos = read_adc(PITCH_POT_PATH)
+    logger.log("position",pos)
     output = controller.compute(pos)
+    logger.log("output",output)
     print(output)
     if output < 0:
         gpio.set_value(351, 0)
@@ -27,4 +33,7 @@ while pos > 350:
     #print(pos)
     
 pwm.set_pwm_dc(M4_PATH, 0)
+
+print("log file generated: " logger.filename)
+#print(logger_auto.subscribe()) #or print logged data
         
