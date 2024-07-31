@@ -12,19 +12,7 @@ gpio.setup_pin(351, direction='out', default_value=0)
 
 gpio.set_value(351, 1)
 pwm.set_pwm_dc(M4_PATH, 50)
-time.sleep(1)
-
-gpio.set_value(351, 0)
-pwm.set_pwm_dc(M4_PATH, 50)
-time.sleep(1)
-
-gpio.set_value(351, 1)
-pwm.set_pwm_dc(M4_PATH, 50)
-time.sleep(1)
-
-gpio.set_value(351, 0)
-pwm.set_pwm_dc(M4_PATH, 50)
-time.sleep(1)
+time.sleep(0.5)
 
 pwm.set_pwm_dc(M4_PATH, 0)
 gpio.cleanup(351)
